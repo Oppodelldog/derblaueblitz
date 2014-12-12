@@ -10,6 +10,7 @@ namespace Bplusd\derblaueblitz;
 
 use TYPO3\CMS\Backend\Toolbar\ClearCacheActionsHookInterface;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+use TYPO3\CMS\Backend\Utility\BackendUtility;
 
 
 class ClearCacheHook implements ClearCacheActionsHookInterface {
@@ -19,17 +20,17 @@ class ClearCacheHook implements ClearCacheActionsHookInterface {
      *
      * @param array $cacheActions Array of CacheMenuItems
      * @param array $optionValues Array of AccessConfigurations-identifiers (typically  used by userTS with options.clearCache.identifier)
-     * @return
      */
     public function manipulateCacheActions(&$cacheActions, &$optionValues)
     {
-        // derblaueblitz for backend admins
-        if ($GLOBALS['BE_USER']->isAdmin()) {
+        /** @var \TYPO3\CMS\Core\Authentication\BackendUserAuthentication $beUser */
+        $beUser = $GLOBALS['BE_USER'];
+        if ($beUser->isAdmin()) {
             $cacheActions[] = array(
                 'id' => 'derblaueblitz',
                 'title' => "Der Blaue Blitz!!!",
-                'href' => $this->backPath . 'tce_db.php?vC=' . $GLOBALS['BE_USER']->veriCode() . '&cacheCmd=derblaueblitz&ajaxCall=1' . \TYPO3\CMS\Backend\Utility\BackendUtility::getUrlToken('tceAction'),
-                'icon' => '<img src="'.ExtensionManagementUtility::extRelPath("derblaueblitz").ExtensionManagementUtility::getExtensionIcon(ExtensionManagementUtility::extPath("derblaueblitz")).'" width="18" height="16"/>'
+                'href' => $this->backPath . 'tce_db.php?vC=' . $beUser->veriCode() . '&cacheCmd=derblaueblitz&ajaxCall=1' . BackendUtility::getUrlToken('tceAction'),
+                'icon' => '<img src="'.ExtensionManagementUtility::extRelPath("derblaueblitz").'blauerblitz.png" width="18" height="16"/>'
             );
         }
     }
@@ -40,27 +41,28 @@ class ClearCacheHook implements ClearCacheActionsHookInterface {
    * @param \TYPO3\CMS\Core\DataHandling\DataHandler $dataHandler
    */
         public static function clear($_params, $dataHandler) {
+
         /** @var \TYPO3\CMS\Core\Database\DatabaseConnection $db */
         $db = $GLOBALS['TYPO3_DB'];
 
-        $res = $db->exec_TRUNCATEquery("cf_cache_hash");
-        $res = $db->exec_TRUNCATEquery("cf_cache_hash_tags");
-        $res = $db->exec_TRUNCATEquery("cf_cache_pages");
-        $res = $db->exec_TRUNCATEquery("cf_cache_pagesection");
-        $res = $db->exec_TRUNCATEquery("cf_cache_pagesection_tags");
-        $res = $db->exec_TRUNCATEquery("cf_cache_pages_tags");
-        $res = $db->exec_TRUNCATEquery("cf_cache_rootline");
-        $res = $db->exec_TRUNCATEquery("cf_cache_rootline_tags");
-        $res = $db->exec_TRUNCATEquery("cf_extbase_datamapfactory_datamap");
-        $res = $db->exec_TRUNCATEquery("cf_extbase_datamapfactory_datamap_tags");
-        $res = $db->exec_TRUNCATEquery("cf_extbase_object");
-        $res = $db->exec_TRUNCATEquery("cf_extbase_object_tags");
-        $res = $db->exec_TRUNCATEquery("cf_extbase_reflection");
-        $res = $db->exec_TRUNCATEquery("cf_extbase_reflection_tags");
-        $res = $db->exec_TRUNCATEquery("cf_extbase_typo3dbbackend_queries");
-        $res = $db->exec_TRUNCATEquery("cf_extbase_typo3dbbackend_queries_tags");
-        $res = $db->exec_TRUNCATEquery("cf_extbase_typo3dbbackend_tablecolumns");
-        $res = $db->exec_TRUNCATEquery("cf_extbase_typo3dbbackend_tablecolumns_tags");
+        $db->exec_TRUNCATEquery("cf_cache_hash");
+        $db->exec_TRUNCATEquery("cf_cache_hash_tags");
+        $db->exec_TRUNCATEquery("cf_cache_pages");
+        $db->exec_TRUNCATEquery("cf_cache_pagesection");
+        $db->exec_TRUNCATEquery("cf_cache_pagesection_tags");
+        $db->exec_TRUNCATEquery("cf_cache_pages_tags");
+        $db->exec_TRUNCATEquery("cf_cache_rootline");
+        $db->exec_TRUNCATEquery("cf_cache_rootline_tags");
+        $db->exec_TRUNCATEquery("cf_extbase_datamapfactory_datamap");
+        $db->exec_TRUNCATEquery("cf_extbase_datamapfactory_datamap_tags");
+        $db->exec_TRUNCATEquery("cf_extbase_object");
+        $db->exec_TRUNCATEquery("cf_extbase_object_tags");
+        $db->exec_TRUNCATEquery("cf_extbase_reflection");
+        $db->exec_TRUNCATEquery("cf_extbase_reflection_tags");
+        $db->exec_TRUNCATEquery("cf_extbase_typo3dbbackend_queries");
+        $db->exec_TRUNCATEquery("cf_extbase_typo3dbbackend_queries_tags");
+        $db->exec_TRUNCATEquery("cf_extbase_typo3dbbackend_tablecolumns");
+        $db->exec_TRUNCATEquery("cf_extbase_typo3dbbackend_tablecolumns_tags");
 
         // rename typo3temp (renaming is faster than removing)
         $typo3temp = PATH_site . 'typo3temp';
