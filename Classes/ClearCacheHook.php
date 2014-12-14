@@ -45,7 +45,7 @@ class ClearCacheHook implements ClearCacheActionsHookInterface {
 
             if($enablePink){
                 $item = array(
-                    'id' => 'derblaueblitz',
+                    'id' => 'derpinkeblitz',
                     'title' => "Move typo3temp",
                     'href' => 'tce_db.php?vC=' . $beUser->veriCode() . '&cacheCmd=derpinkeblitz&ajaxCall=1' . BackendUtility::getUrlToken('tceAction'),
                     'icon' => '<img src="'.ExtensionManagementUtility::extRelPath("derblaueblitz").'pinkerblitz.png" width="18" height="16"/>'
