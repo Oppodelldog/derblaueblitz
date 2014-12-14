@@ -1,0 +1,5 @@
+# cat=basic/enable; type=boolean; label=Blue Flash: enables the blue flash in clear-cache menu
+enableBlue = 1
+
+# cat=basic/enable; type=boolean; label=Blue Flash: enables the pink flash in clear-cache menu
+enablePink = 0

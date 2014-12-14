@@ -23,25 +23,60 @@ class ClearCacheHook implements ClearCacheActionsHookInterface {
      */
     public function manipulateCacheActions(&$cacheActions, &$optionValues)
     {
+        $settings = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['derblaueblitz']);
+        $enableBlue = $settings['enableBlue'];
+        if(!isset($enableBlue)) $enableBlue = 1;
+        $enablePink = $settings['enablePink'];
+        if(!isset($enablePink)) $enablePink = 0;
+
         /** @var \TYPO3\CMS\Core\Authentication\BackendUserAuthentication $beUser */
         $beUser = $GLOBALS['BE_USER'];
         if ($beUser->isAdmin()) {
-            $cacheActions[] = array(
-                'id' => 'derblaueblitz',
-                'title' => "Der Blaue Blitz!!!",
-                'href' => $this->backPath . 'tce_db.php?vC=' . $beUser->veriCode() . '&cacheCmd=derblaueblitz&ajaxCall=1' . BackendUtility::getUrlToken('tceAction'),
-                'icon' => '<img src="'.ExtensionManagementUtility::extRelPath("derblaueblitz").'blauerblitz.png" width="18" height="16"/>'
-            );
+
+            if($enableBlue){
+                $item = array(
+                    'id' => 'derblaueblitz',
+                    'title' => "Flush CF Caching Tables",
+                    'href' => 'tce_db.php?vC=' . $beUser->veriCode() . '&cacheCmd=derblaueblitz&ajaxCall=1' . BackendUtility::getUrlToken('tceAction'),
+                    'icon' => '<img src="'.ExtensionManagementUtility::extRelPath("derblaueblitz").'blauerblitz.png" width="18" height="16"/>'
+                );
+                array_push($cacheActions,$item);
+            }
+
+            if($enablePink){
+                $item = array(
+                    'id' => 'derblaueblitz',
+                    'title' => "Move typo3temp",
+                    'href' => 'tce_db.php?vC=' . $beUser->veriCode() . '&cacheCmd=derpinkeblitz&ajaxCall=1' . BackendUtility::getUrlToken('tceAction'),
+                    'icon' => '<img src="'.ExtensionManagementUtility::extRelPath("derblaueblitz").'pinkerblitz.png" width="18" height="16"/>'
+                );
+                array_push($cacheActions,$item);
+            }
+
         }
     }
 
     /**
-   * This method is called by the blue flash using ajax
-   * @param \array $_params
-   * @param \TYPO3\CMS\Core\DataHandling\DataHandler $dataHandler
-   */
-        public static function clear($_params, $dataHandler) {
+       * This method is called by the blue flash using ajax
+       * @param \array $_params
+       * @param \TYPO3\CMS\Core\DataHandling\DataHandler $dataHandler
+       */
+    public static function clear($_params, $dataHandler) {
 
+        switch($_params["cacheCmd"]){
+
+            case "derblaueblitz":
+                self::clearBlue();
+            break;
+
+            case "derpinkeblitz":
+                self::clearPink();
+            break;
+
+        }
+    }
+
+    protected static function clearBlue(){
         /** @var \TYPO3\CMS\Core\Database\DatabaseConnection $db */
         $db = $GLOBALS['TYPO3_DB'];
 
@@ -64,6 +99,11 @@ class ClearCacheHook implements ClearCacheActionsHookInterface {
         $db->exec_TRUNCATEquery("cf_extbase_typo3dbbackend_tablecolumns");
         $db->exec_TRUNCATEquery("cf_extbase_typo3dbbackend_tablecolumns_tags");
 
+    }
+
+
+
+    public static function clearPink() {
         // rename typo3temp (renaming is faster than removing)
         $typo3temp = PATH_site . 'typo3temp';
         rename($typo3temp, $typo3temp.'_'.time());
