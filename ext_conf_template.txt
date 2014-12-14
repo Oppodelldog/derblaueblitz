@@ -1,0 +1,5 @@
+# cat=basic/enable; type=boolean; label=Blue Flash: Flush CF Caching Tables
+enableBlue = 1
+
+# cat=basic/enable; type=boolean; label=Blue Flash: Move typo3temp
+enablePink = 0

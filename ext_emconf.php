@@ -6,27 +6,26 @@
  * Time: 17:46
  */
 
-$EM_CONF[$_EXTKEY] = array (
+/** @var string $_EXTKEY */
+$EM_CONF[$_EXTKEY] = array(
 	'title' => 'Der Blaue Blitz',
 	'description' => 'This extension adds another flash to the clear-cache toolbar in typo3. this flash will clear all necessary cache extbase extension development may rely on',
-	'category' => 'cache',
-	'version' => '0.0.1',
+	'category' => 'be',
+	'version' => '0.1.0',
 	'state' => 'beta',
 	'author' => 'Nils Wogatzky',
 	'author_email' => '',
 	'author_company' => '',
 	'constraints' => 
-	array (
+	array(
 		'depends' => 
-		array (
+		array(
 			'typo3' => '6.2.0-0.0.0'
 		),
 		'conflicts' => 
-		array (
-		),
+		array(),
 		'suggests' => 
-		array (
-		),
+		array(),
 	),
 );
 
