@@ -1,7 +1,11 @@
 derblaueblitz
 =============
 
-Typo3 extension that clears some caching tables
+Typo3 extension that extends the typo3 cache icons by new options.
 
-This extension creates an additional flash (a blue one) into the typo3 clear-cache-toolbar.
-The flash will clear the caching-framework tables and rename the typo3temp folder
+* the blue flash
+clears the CF Caching Tables
+
+* the pink flash
+deletes typo3temp folder
+this option can be configured to just rename the folder which is faster than recursive deletion of all content
