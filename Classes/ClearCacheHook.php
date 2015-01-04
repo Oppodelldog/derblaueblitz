@@ -11,7 +11,7 @@ namespace Bplusd\derblaueblitz;
 use TYPO3\CMS\Backend\Toolbar\ClearCacheActionsHookInterface;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
-
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class ClearCacheHook implements ClearCacheActionsHookInterface {
 
@@ -44,9 +44,11 @@ class ClearCacheHook implements ClearCacheActionsHookInterface {
             }
 
             if($enablePink){
+                $pinkTitle="Remove typo3temp";
+                if($settings['PinkMove']==1) $pinkTitle ="Move typo3temp";
                 $item = array(
                     'id' => 'derpinkeblitz',
-                    'title' => "Move typo3temp",
+                    'title' => $pinkTitle,
                     'href' => 'tce_db.php?vC=' . $beUser->veriCode() . '&cacheCmd=derpinkeblitz&ajaxCall=1' . BackendUtility::getUrlToken('tceAction'),
                     'icon' => '<img src="'.ExtensionManagementUtility::extRelPath("derblaueblitz").'pinkerblitz.png" width="18" height="16"/>'
                 );
@@ -102,10 +104,53 @@ class ClearCacheHook implements ClearCacheActionsHookInterface {
     }
 
 
-
     public static function clearPink() {
-        // rename typo3temp (renaming is faster than removing)
-        $typo3temp = PATH_site . 'typo3temp';
-        rename($typo3temp, $typo3temp.'_'.time());
+
+        $settings = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['derblaueblitz']);
+        $tempdir = GeneralUtility::getFileAbsFileName('typo3temp');
+
+        if($settings['PinkMove']!=1) {
+
+
+            if (is_dir($tempdir)) {
+                self::deleteDir($tempdir);
+            }
+            if (!file_exists($tempdir)) {
+                mkdir($tempdir, 0777, true);
+            }
+        }
+        else{
+            // rename typo3temp (renaming is faster than removing)
+            if (is_dir($tempdir)){
+                rename($tempdir,$tempdir."_".time());
+            }
+        }
+    }
+
+    /**
+     * removes a directory including all subdirectories and files
+     * @param $path
+     * @return bool
+     */
+    private function deleteDir($path) {
+
+        if (is_dir($path) === true)
+        {
+            $files = array_diff(scandir($path), array('.', '..'));
+
+            foreach ($files as $file)
+            {
+                self::deleteDir(realpath($path) . '/' . $file);
+            }
+
+            return rmdir($path);
+        }
+
+        else if (is_file($path) === true)
+        {
+            return unlink($path);
+        }
+
+        return false;
     }
 }

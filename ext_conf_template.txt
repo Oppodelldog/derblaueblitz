@@ -1,5 +1,8 @@
-# cat=basic/enable; type=boolean; label=Blue Flash: Flush CF Caching Tables
+# cat=blue/enable; type=boolean; label=Enable Blue Flash: Flush CF Caching Tables
 enableBlue = 1
 
-# cat=basic/enable; type=boolean; label=Blue Flash: Move typo3temp
-enablePink = 0
+# cat=pink/enable; type=boolean; label=Enable Pink Flash: Remove typo3temp
+enablePink = 1
+
+# cat=pink/enable; type=boolean; label=Just Rename: Just move temp-dir (faster than deletion, but does not delete the directory)
+PinkMove=0
